@@ -1,0 +1,30 @@
+{
+  "name": "Flipp.er",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mrgentledolphin/Flipp.er.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mrgentledolphin/Flipp.er/issues"
+  },
+  "homepage": "https://github.com/mrgentledolphin/Flipp.er#readme",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "express": "^4.16.3",
+    "hjs": "0.0.6",
+    "mongodb": "^3.1.0-beta4",
+    "mongoose": "^5.1.2"
+  },
+  "devDependencies": {
+    "nodemon": "^1.17.4"
+  }
+}
