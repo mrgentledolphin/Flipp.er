@@ -8,29 +8,8 @@ mongoose.connect(url)
 let db = mongoose.connection
 db.on('error', console.error.bind(console, 'MongoDB connection error:'))
 
-
-let Schema = mongoose.Schema
-
-let usersSchema = new Schema({
-    first_name: String,
-    last_name: String,
-    age: Number,
-    address: String,
-    city: String,
-    email: String,
-    password: String,
-    posts: [String],
-    follows: [String],
-    favourite: [String],
-    profileImg: String,
-    backImg: String,
-    description: String
-})
-let postsScheme = new Schema({
-
-})
-let userModel = mongoose.model('users', usersSchema)
-
+let userModel = require('./user.js')
+let postModel = require('./post.js')
 
 console.log('Server started on port: ' + (port || 8080)) 
 
@@ -67,5 +46,5 @@ express()
             findById()
             */
     })
-
+    
     .listen(port || 8080)
