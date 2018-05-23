@@ -1,6 +1,7 @@
 const express = require('express')
 const bodyParser = require('body-parser')
 const port = 3500
+const path = require('path')
 /* MONGODB */
 const mongoose = require('mongoose')
 const url = 'mongodb://gd:gd@ds231460.mlab.com:31460/flipper'
@@ -18,9 +19,32 @@ express()
     .use(bodyParser.urlencoded({extended: false}))
     .use(bodyParser.json())
     .set('view engine', 'hjs')
-    .use(express.static(__dirname + './views'))
+    .use(express.static(__dirname + '/views/'))
 /* GET AND POST REQUESTS */
-
+    .get('/', (req, res) => {
+        userModel.findOne({}, (err, user) => {
+            if (err) return handleError(err)
+            let { posts } = user
+            let finalPosts = []
+            postModel.find({}, (err, postRaw) => {
+                if (err) return handleError(err)
+                for (let i = 0; i < postRaw.length; i++) {
+                    for (let j = 0; j < posts.length; j++) {
+                        if (String(postRaw[i]._id) == posts[j]) {
+                            finalPosts.push(postRaw[i])
+                        }
+                    }
+                }
+                res.render('index', {
+                    user,
+                    posts: finalPosts
+                })
+            })
+        })
+    })
+    .post('/post', (req, res) => {
+        res.send(req.body)
+    })
     .get('/getAllUser', (req, res) => {
         let query = userModel.find({})
         query.select('first_name last_name')

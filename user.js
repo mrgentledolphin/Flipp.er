@@ -10,7 +10,7 @@ let usersSchema = new Schema({
     password: String,
     posts: [String],
     follows: [String],
-    favourite: [String],
+    favorite: [String],
     profileImg: String,
     backImg: String,
     description: String

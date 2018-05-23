@@ -6,8 +6,7 @@ let postsScheme = new Schema({
     text: String,
     hasImg: Boolean,
     hasVid: Boolean,
-    url: String,
-    comments: []
+    url: String
 })
 
 module.exports = mongoose.model('posts', postsScheme)

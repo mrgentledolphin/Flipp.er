@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Flipp.er</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/css/materialize.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/js/materialize.min.js"></script>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="main.css">
+</head>
+<body>
+    {{!-- SIDENAV START --}}
+    <ul id="slide-out" class="sidenav">
+        <li>
+            {{#user}}
+            <div class="user-view">
+                <div class="background">
+                    <img src="{{backImg}}">
+                </div>
+                <a href="/profile">
+                    <img class="circle" src="{{profileImg}}">
+                </a>
+                <a href="/profile">
+                    <span class="white-text name">{{first_name}} {{last_name}}</span>
+                </a>
+                <a href="mailto:{{email}}">
+                    <span class="white-text email">{{email}}</span>
+                </a>
+            </div>
+            {{/user}}
+        </li>
+        <li><a href="/profile"><i class="material-icons">account_circle</i>Profile</a></li>
+        <li><a href="/follows"><i class="material-icons">thumb_up</i>Follows</a></li>
+        <li><a href="/favourite"><i class="material-icons">favorite</i>Favorite</a></li>
+        <li><a href="/search"><i class="material-icons">search</i>Search People</a></li>
+        <li><a href="/logout"><i class="material-icons">exit_to_app</i>Log Out</a></li>
+
+        </li>
+    </ul>
+    {{!-- SIDENAV END --}}
+    {{!-- NAVBAR START --}}
+    <nav>
+        <div class="nav-wrapper blue">
+            <a href="#" data-target="slide-out" class="sidenav-trigger">
+                <i class="material-icons">menu</i>
+            </a>
+            <a href="#" class="brand-logo center">Flipp.er</a>
+            <ul id="nav-mobile" class="right hide-on-med-and-down">
+                <li>
+                    <a href="/profile">Profile</a>
+                </li>
+                <li>
+                    <a href="/info">Info</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    {{!-- NAVBAR END --}}
+    <div class="container">
+        {{!-- PUBLIC A POST START --}}
+        <div class="publicPost z-depth-2 pad2">
+            <form action="/post" method="POST" class="postForm hidden">
+                <h4>Public your post...</h4>
+                <div class="input-field">
+                    <input type="text" id="title" name="title" data-length="60">
+                    <label for="title">Title...</label>
+                </div>
+                <div class="input-field">
+                    <input type="text" id="text" name="text">
+                    <label for="text">Text...</label>
+                </div>
+                <p>
+                    <label>
+                        <input name="group1" type="radio" checked value="img" />
+                        <span>Image</span>
+                    </label>
+                </p>
+                <p>
+                    <label>
+                        <input name="group1" type="radio" value="vid"/>
+                        <span>Video</span>
+                    </label>
+                </p>
+                <div class="input-field">
+                    <input type="URL" id="url" name="url">
+                    <label for="url">Url...</label>
+                </div>
+                <input type="submit" class="btn blue">
+            </form>
+            <p class="center-align absoluteCenter">
+                <a class="btn-floating btn-large waves-effect waves-light red down" id="postToggle">
+                    <i class="material-icons">keyboard_arrow_down</i>
+                </a>
+            </p>
+        </div>
+        {{!-- PUBLIC A POST END --}}
+        {{!-- POSTS START --}}
+        <div class="posts">
+            {{#posts}}
+            <div class="row">
+                <div class="col s12">
+                    <div class="card">
+                        <div class="card-image">
+                            <img src="{{url}}" class="materialboxed">
+                            <span class="card-title">{{title}}</span>
+                            <a class="btn-floating halfway-fab waves-effect waves-light red favPost noCuore" data-id="{{_id}}">
+                                <i class="material-icons">favorite_border</i>
+                            </a>
+                        </div>
+                        <div class="card-content">
+                            <p>{{text}}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {{/posts}}
+        </div>
+        {{!-- POSTS END --}}
+    </div>
+
+    <script src="./script.js"></script>
+</body>
+</html>
