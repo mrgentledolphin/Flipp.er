@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,7 +11,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/js/materialize.min.js"></script>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="main.css">
+    <link rel="stylesheet" href="profile.css">
 </head>
+
 <body>
     {{!-- SIDENAV START --}}
     <ul id="slide-out" class="sidenav">
@@ -32,11 +35,26 @@
             </div>
             {{/user}}
         </li>
-        <li><a href="/profile"><i class="material-icons">account_circle</i>Profile</a></li>
-        <li><a href="/follows"><i class="material-icons">thumb_up</i>Follows</a></li>
-        <li><a href="/favourite"><i class="material-icons">favorite</i>Favorite</a></li>
-        <li><a href="/search"><i class="material-icons">search</i>Search People</a></li>
-        <li><a href="/logout"><i class="material-icons">exit_to_app</i>Log Out</a></li>
+        <li>
+            <a href="/profile">
+                <i class="material-icons">account_circle</i>Profile</a>
+        </li>
+        <li>
+            <a href="/follows">
+                <i class="material-icons">thumb_up</i>Follows</a>
+        </li>
+        <li>
+            <a href="/favourite">
+                <i class="material-icons">favorite</i>Favorite</a>
+        </li>
+        <li>
+            <a href="/search">
+                <i class="material-icons">search</i>Search People</a>
+        </li>
+        <li>
+            <a href="/logout">
+                <i class="material-icons">exit_to_app</i>Log Out</a>
+        </li>
 
         </li>
     </ul>
@@ -61,33 +79,44 @@
         </nav>
     </div>
     {{!-- NAVBAR END --}}
+    {{!-- PROFILE START --}}
+    {{#user}}
+    <div class="col s12 backgroundProfile"></div>
     <div class="container">
-        {{!-- PUBLIC A POST START --}}
-        <div class="publicPost z-depth-2 pad2">
-            <form action="/post" method="POST" class="postForm hidden">
-                <h4>Public your post...</h4>
-                <div class="input-field">
-                    <input type="text" id="title" name="title" data-length="60">
-                    <label for="title">Title...</label>
+        <ul class="collection with-header">
+            <li class="collection-header">
+                <div class="row valign-wrapper">
+                    <div class="col">
+                        <img src="{{profileImg}}" alt="" class="circle responsive-img imgBox">
+                    </div>
+                    <div class="col">
+                        <h4 class="black-text">
+                            {{first_name}} {{last_name}}
+                        </h4>
+                    </div>
                 </div>
-                <div class="input-field">
-                    <input type="text" id="text" name="text">
-                    <label for="text">Text...</label>
-                </div>
-                <div class="input-field">
-                    <input type="URL" id="url" name="url">
-                    <label for="url">Url...</label>
-                </div>
-                <input type="submit" class="btn blue">
-            </form>
-            <p class="center-align absoluteCenter">
-                <a class="btn-floating btn-large waves-effect waves-light red down" id="postToggle">
-                    <i class="material-icons">keyboard_arrow_down</i>
-                </a>
-            </p>
-        </div>
-        {{!-- PUBLIC A POST END --}}
-        {{!-- POSTS START --}}
+            </li>
+            <li class="collection-item"><div><b>Age:</b> {{age}}<a href="#!" class="secondary-content"><i class="material-icons cursor">cake</i></a></div></li>
+            <li class="collection-item"><div><b>Address:</b> {{address}}<a href="#!" class="secondary-content"><i class="material-icons cursor">home</i></a></div></li>
+            <li class="collection-item"><div><b>City:</b> {{city}}<a href="#!" class="secondary-content"><i class="material-icons cursor">location_city</i></a></div></li>
+            <li class="collection-item"><div><b>Email:</b><a href="mailto:{{email}}"> {{email}}</a><a href="#!" class="secondary-content"><i class="material-icons cursor">mail</i></a></div></li>
+            <li class="collection-item"><div><b>Description:</b> {{description}}<a href="#!" class="secondary-content"><i class="material-icons cursor">book</i></a></div></li>
+        </ul>
+    <style>
+        .backgroundProfile{
+            float: left;
+            margin: 0;
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+            background: url({{backImg}});
+            background-position: cover;
+            z-index: -5;
+            position: fixed
+        }
+    </style>
+    {{/user}}
+    {{!-- PROFILE END --}}
         <div class="posts">
             {{#posts}}
             <div class="row">
@@ -109,9 +138,8 @@
             </div>
             {{/posts}}
         </div>
-        {{!-- POSTS END --}}
     </div>
-
     <script src="./script.js"></script>
 </body>
+
 </html>

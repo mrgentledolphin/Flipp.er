@@ -20,6 +20,9 @@ absoluteCenter{
     right: 0;
 }
 
+.cursor{
+    cursor: auto;
+}
 
 @media (min-width: 100px) {
     nav a.sidenav-trigger {
@@ -30,4 +33,8 @@ absoluteCenter{
     .container {
         width: 45%;
     }
+}
+
+.row .col {
+    padding: 0;
 }

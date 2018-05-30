@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Flipp.er</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/css/materialize.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/js/materialize.min.js"></script>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="../main.css">
+    <link rel="stylesheet" href="../profile.css">
+</head>
+
+<body>
+    {{!-- SIDENAV START --}}
+    <ul id="slide-out" class="sidenav">
+        <li>
+            {{#user}}
+            <div class="user-view">
+                <div class="background">
+                    <img src="{{backImg}}">
+                </div>
+                <a href="/profile">
+                    <img class="circle" src="{{profileImg}}">
+                </a>
+                <a href="/profile">
+                    <span class="white-text name">{{first_name}} {{last_name}}</span>
+                </a>
+                <a href="mailto:{{email}}">
+                    <span class="white-text email">{{email}}</span>
+                </a>
+            </div>
+            {{/user}}
+        </li>
+        <li>
+            <a href="/profile">
+                <i class="material-icons">account_circle</i>Profile</a>
+        </li>
+        <li>
+            <a href="/follows">
+                <i class="material-icons">thumb_up</i>Follows</a>
+        </li>
+        <li>
+            <a href="/favourite">
+                <i class="material-icons">favorite</i>Favorite</a>
+        </li>
+        <li>
+            <a href="/search">
+                <i class="material-icons">search</i>Search People</a>
+        </li>
+        <li>
+            <a href="/logout">
+                <i class="material-icons">exit_to_app</i>Log Out</a>
+        </li>
+
+        </li>
+    </ul>
+    {{!-- SIDENAV END --}} {{!-- NAVBAR START --}}
+    <div class="navbar-fixed">
+        <nav>
+            <div class="nav-wrapper blue ">
+                <a href="#" data-target="slide-out" class="sidenav-trigger">
+                    <i class="material-icons">menu</i>
+                </a>
+                <a href="/" class="brand-logo center">Flipp.er</a>
+                <ul id="nav-mobile" class="right hide-on-med-and-down">
+                    <li>
+                        <a href="/profile">Profile</a>
+                    </li>
+                    <li>
+                        <a href="/info">Info</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </div>
+    {{!-- NAVBAR END --}} {{!-- PROFILE START --}} {{#user}}
+    <div class="col s12 backgroundProfile"></div>
+    <div class="container">
+        <ul class="collection with-header">
+            <li class="collection-header">
+                <div class="row valign-wrapper">
+                    <div class="col">
+                        <img src="{{profileImg}}" alt="" class="circle responsive-img imgBox">
+                    </div>
+                    <div class="col">
+                        <h4 class="black-text">
+                            {{first_name}} {{last_name}}
+                        </h4>
+                    </div>
+                </div>
+            </li>
+            <li class="collection-item">
+                <div>
+                    <b>Age:</b> {{age}}
+                    <a href="#!" class="secondary-content">
+                        <i class="material-icons cursor">cake</i>
+                    </a>
+                </div>
+            </li>
+            <li class="collection-item">
+                <div>
+                    <b>Address:</b> {{address}}
+                    <a href="#!" class="secondary-content">
+                        <i class="material-icons cursor">home</i>
+                    </a>
+                </div>
+            </li>
+            <li class="collection-item">
+                <div>
+                    <b>City:</b> {{city}}
+                    <a href="#!" class="secondary-content">
+                        <i class="material-icons cursor">location_city</i>
+                    </a>
+                </div>
+            </li>
+            <li class="collection-item">
+                <div>
+                    <b>Email:</b>
+                    <a href="mailto:{{email}}"> {{email}}</a>
+                    <a href="#!" class="secondary-content">
+                        <i class="material-icons cursor">mail</i>
+                    </a>
+                </div>
+            </li>
+            <li class="collection-item">
+                <div>
+                    <b>Description:</b> {{description}}
+                    <a href="#!" class="secondary-content">
+                        <i class="material-icons cursor">book</i>
+                    </a>
+                </div>
+            </li>
+        </ul>
+        <style>
+            .backgroundProfile {
+                float: left;
+                margin: 0;
+                height: 100vh;
+                width: 100vw;
+                overflow: hidden;
+                background: url({{backImg}});
+                background-position: cover;
+                z-index: -5;
+                position: fixed
+            }
+        </style>
+        {{/user}} {{!-- PROFILE END --}}
+        <div class="posts">
+            {{#posts}}
+            <div class="row">
+                <div class="col s12">
+                    <div class="card">
+                        <div class="card-image">
+                            <img src="{{url}}" class="materialboxed">
+                            <span class="card-title">{{title}}</span>
+                            <a class="btn-floating halfway-fab waves-effect waves-light red favPost {{cuore}}" data-id="{{_id}}">
+                                <i class="material-icons">{{class}}</i>
+                            </a>
+                        </div>
+                        <div class="card-content">
+                            <a href="/profile/{{userId}}">{{publisher}}</a>
+                            <p>{{text}}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {{/posts}}
+        </div>
+    </div>
+    <script src="../script.js"></script>
+</body>
+
+</html>

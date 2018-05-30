@@ -23,13 +23,35 @@ $('.favPost').on('click', function () {
     if ($(this).hasClass('noCuore')) {
         $(this).html('<i class="material-icons">favorite</i>')
         $(this).addClass('Cuore').removeClass('noCuore')
-        console.log($(this).attr('data-id'))
+        let postId = {
+            postId: $(this).attr('data-id')
+        }
+        $.ajax({
+            type: 'POST',
+            url: '/addFav',
+            data: postId,
+            success: (response) => {
+                console.log(response)
+            }
+        })
     } else {
         $(this).html('<i class="material-icons">favorite_border</i>')
         $(this).removeClass('Cuore').addClass('noCuore')
+        let postId = {
+            postId: $(this).attr('data-id')
+        }
+        $.ajax({
+            type: 'POST',
+            url: '/remFav',
+            data: postId,
+            success: (response) => {
+                console.log(response)
+            }
+        })
     }  
 })
 
 $(document).ready(function () {
     $('.materialboxed').materialbox()
 })
+
