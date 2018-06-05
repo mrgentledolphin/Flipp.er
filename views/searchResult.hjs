@@ -11,7 +11,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/js/materialize.min.js"></script>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="main.css">
-    <link rel="stylesheet" href="profile.css">
 </head>
 
 <body>
@@ -58,8 +57,7 @@
 
         </li>
     </ul>
-    {{!-- SIDENAV END --}}
-    {{!-- NAVBAR START --}}
+    {{!-- SIDENAV END --}} {{!-- NAVBAR START --}}
     <div class="navbar-fixed">
         <nav>
             <div class="nav-wrapper blue ">
@@ -79,67 +77,26 @@
         </nav>
     </div>
     {{!-- NAVBAR END --}}
-    {{!-- PROFILE START --}}
-    {{#user}}
-    <div class="col s12 backgroundProfile"></div>
     <div class="container">
-        <ul class="collection with-header">
-            <li class="collection-header">
+        {{!-- SEARCH START --}}
+        {{#user}}
+        <div class="col s12 m8 offset-m2 l6 offset-l3">
+            <div class="card-panel grey lighten-5 z-depth-1">
                 <div class="row valign-wrapper">
-                    <div class="col">
-                        <img src="{{profileImg}}" alt="" class="circle responsive-img imgBox">
+                    <div class="col s2">
+                        <img src="{{profileImg}}" class="circle responsive-img materialboxed">
                     </div>
-                    <div class="col">
-                        <h4 class="black-text">
-                            {{first_name}} {{last_name}}
-                            <a href="/editProfile/{{_id}}" class="waves-effect waves-light btn green"><i class="material-icons right">create</i>Edit Profile</a>
-                        </h4>
-                    </div>
-                </div>
-            </li>
-            <li class="collection-item"><div><b>Age:</b> {{age}}<a href="#!" class="secondary-content"><i class="material-icons cursor">cake</i></a></div></li>
-            <li class="collection-item"><div><b>Address:</b> {{address}}<a href="#!" class="secondary-content"><i class="material-icons cursor">home</i></a></div></li>
-            <li class="collection-item"><div><b>City:</b> {{city}}<a href="#!" class="secondary-content"><i class="material-icons cursor">location_city</i></a></div></li>
-            <li class="collection-item"><div><b>Email:</b><a href="mailto:{{email}}"> {{email}}</a><a href="#!" class="secondary-content"><i class="material-icons cursor">mail</i></a></div></li>
-            <li class="collection-item"><div><b>Description:</b> {{description}}<a href="#!" class="secondary-content"><i class="material-icons cursor">book</i></a></div></li>
-        </ul>
-    <style>
-        .backgroundProfile{
-            float: left;
-            margin: 0;
-            height: 100vh;
-            width: 100vw;
-            overflow: hidden;
-            background: url({{backImg}});
-            background-position: cover;
-            z-index: -5;
-            position: fixed
-        }
-    </style>
-    {{/user}}
-    {{!-- PROFILE END --}}
-        <div class="posts">
-            {{#posts}}
-            <div class="row">
-                <div class="col s12">
-                    <div class="card">
-                        <div class="card-image">
-                            <img src="{{url}}" class="materialboxed">
-                            <span class="card-title">{{title}}</span>
-                            <a class="btn-floating halfway-fab waves-effect waves-light red favPost {{cuore}}" data-id="{{_id}}">
-                                <i class="material-icons">{{class}}</i>
-                            </a>
-                        </div>
-                        <div class="card-content">
-                            <a href="/profile/{{userId}}">{{publisher}}</a>
-                            <p>{{text}}</p>
-                        </div>
+                    <div class="col s10" style="padding: 10px;">
+                        <h5><a href="/profile/{{_id}}">{{first_name}} {{last_name}}</a></h5>
+                        <p><a href="mailto:{{email}}">{{email}}</a></p>
                     </div>
                 </div>
             </div>
-            {{/posts}}
         </div>
+        {{/user}}
+        {{!-- SEARCH END --}}
     </div>
+
     <script src="./script.js"></script>
 </body>
 

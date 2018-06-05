@@ -51,6 +51,38 @@ $('.favPost').on('click', function () {
     }  
 })
 
+$('.addFollow').on('click', function () {
+    if ($(this).hasClass('blue')) {
+        $(this).html('<i class="material-icons right">thumb_down</i>Unfollow')
+        $(this).addClass('red').removeClass('blue')
+        let userId = {
+            userId: $(this).attr('data-id')
+        }
+        $.ajax({
+            type: 'POST',
+            url: '/addFollow',
+            data: userId,
+            success: (response) => {
+                console.log(response)
+            }
+        })
+    } else {
+        $(this).html('<i class="material-icons right">thumb_up</i>Follow')
+        $(this).removeClass('red').addClass('blue')
+        let userId = {
+            userId: $(this).attr('data-id')
+        }
+        $.ajax({
+            type: 'POST',
+            url: '/remFollow',
+            data: userId,
+            success: (response) => {
+                console.log(response)
+            }
+        })
+    }
+})
+
 $(document).ready(function () {
     $('.materialboxed').materialbox()
 })

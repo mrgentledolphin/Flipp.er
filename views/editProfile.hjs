@@ -44,7 +44,7 @@
                 <i class="material-icons">thumb_up</i>Follows</a>
         </li>
         <li>
-            <a href="/favorite">
+            <a href="/favourite">
                 <i class="material-icons">favorite</i>Favorite</a>
         </li>
         <li>
@@ -89,52 +89,70 @@
                     <div class="col">
                         <h4 class="black-text">
                             {{first_name}} {{last_name}}
-                            <a data-id="{{_id}}" class="waves-effect waves-light btn {{#isFollowed}} {{color}} addFollow"><i class="material-icons right">{{icon}}</i>{{text}}{{/isFollowed}}</a>
                         </h4>
                     </div>
                 </div>
             </li>
+            <form action="/editProfile/{{_id}}" method="POST">
             <li class="collection-item">
-                <div>
-                    <b>Age:</b> {{age}}
-                    <a href="#!" class="secondary-content">
-                        <i class="material-icons cursor">cake</i>
-                    </a>
+                <div class="input-field">
+                    <input class="validate" required type="number" name="age" id="age" value="{{age}}">
+                    <label for="age">Age:</label>
                 </div>
             </li>
             <li class="collection-item">
-                <div>
-                    <b>Address:</b> {{address}}
-                    <a href="#!" class="secondary-content">
-                        <i class="material-icons cursor">home</i>
-                    </a>
+                <div class="input-field">
+                    <input class="validate" required type="text" name="address" id="address" value="{{address}}">
+                    <label for="address">Address:</label>
                 </div>
             </li>
             <li class="collection-item">
-                <div>
-                    <b>City:</b> {{city}}
-                    <a href="#!" class="secondary-content">
-                        <i class="material-icons cursor">location_city</i>
-                    </a>
+                <div class="input-field">
+                    <input class="validate" required type="text" name="city" id="city" value="{{city}}">
+                    <label for="city">City:</label>
                 </div>
             </li>
             <li class="collection-item">
-                <div>
-                    <b>Email:</b>
-                    <a href="mailto:{{email}}"> {{email}}</a>
-                    <a href="#!" class="secondary-content">
-                        <i class="material-icons cursor">mail</i>
-                    </a>
+                <div class="input-field">
+                    <input class="validate" required type="email" name="email" id="email" value="{{email}}">
+                    <label for="email">Email:</label>
                 </div>
             </li>
             <li class="collection-item">
-                <div>
-                    <b>Description:</b> {{description}}
-                    <a href="#!" class="secondary-content">
-                        <i class="material-icons cursor">book</i>
-                    </a>
+                <div class="input-field">
+                    <input class="validate" required type="url" name="backImg" id="backImg" value="{{backImg}}">
+                    <label for="backImg">Background Image:</label>
                 </div>
             </li>
+            <li class="collection-item">
+                <div class="input-field">
+                    <input class="validate" required type="url" name="profileImg" id="profileImg" value="{{profileImg}}">
+                    <label for="profileImg">Profile Image:</label>
+                </div>
+            </li>
+            <li class="collection-item">
+                <div class="input-field">
+                    <input class="validate" required type="text" name="description" id="description" value="{{description}}">
+                    <label for="description">Description:</label>
+                </div>
+            </li>
+            <li class="collection-item">
+                <div class="input-field">
+                    <input class="validate" required type="password" name="password" id="password">
+                    <label for="password">Password:</label>
+                </div>
+            </li>
+            <li class="collection-item">
+                <div class="input-field">
+                    <input class="validate" required type="password" name="passwordConfirm" id="passwordConfirm">
+                    <label for="passwordConfirm">Confirm Password:</label>
+                </div>
+            </li>
+            <li class="collection-item">
+                <input type="submit" class="btn green">
+                <input type="reset" class="btn red">
+            </li>
+            </form>
         </ul>
         <style>
             .backgroundProfile {
@@ -150,27 +168,6 @@
             }
         </style>
         {{/user}} {{!-- PROFILE END --}}
-        <div class="posts">
-            {{#posts}}
-            <div class="row">
-                <div class="col s12">
-                    <div class="card">
-                        <div class="card-image">
-                            <img src="{{url}}" class="materialboxed">
-                            <span class="card-title">{{title}}</span>
-                            <a class="btn-floating halfway-fab waves-effect waves-light red favPost {{cuore}}" data-id="{{_id}}">
-                                <i class="material-icons">{{class}}</i>
-                            </a>
-                        </div>
-                        <div class="card-content">
-                            <a href="/profile/{{userId}}">{{publisher}}</a>
-                            <p>{{text}}</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            {{/posts}}
-        </div>
     </div>
     <script src="../script.js"></script>
 </body>

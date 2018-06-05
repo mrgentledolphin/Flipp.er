@@ -12,7 +12,7 @@
 .hidden{
     display: none;
 }
-absoluteCenter{
+.absoluteCenter{
     position: absolute;
     margin-left: auto;
     margin-right: auto;
@@ -23,6 +23,11 @@ absoluteCenter{
 .cursor{
     cursor: auto;
 }
+
+input:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0 30px white inset;
+}
+
 
 @media (min-width: 100px) {
     nav a.sidenav-trigger {
@@ -35,6 +40,9 @@ absoluteCenter{
     }
 }
 
+@media only screen and (max-width: 993px) {
+
+}
 .row .col {
     padding: 0;
 }

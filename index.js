@@ -1,4 +1,6 @@
 const express = require('express')
+const session = require('express-session')
+const passport = require('passport')
 const bodyParser = require('body-parser')
 const port = 3500
 const path = require('path')
@@ -11,6 +13,7 @@ db.on('error', console.error.bind(console, 'MongoDB connection error:'))
 
 let userModel = require('./user.js')
 let postModel = require('./post.js')
+require('./passport')
 
 console.log('Server started on port: ' + (port || 8080)) 
 
@@ -20,41 +23,50 @@ express()
     .use(bodyParser.json())
     .set('view engine', 'hjs')
     .use(express.static(__dirname + '/views/'))
+    .use(session({secret: 'flipper', saveUninitialized: false, resave: false}))
+    .use(passport.initialize())
+    .use(passport.session())
 /* GET AND POST REQUESTS */
     .get('/', (req, res) => {
-        userModel.findOne({}, (err, user) => {
-            if (err) return handleError(err)
-            let { _id } = user
-            let finalPosts = []
-            let posts = []
-            postModel.find({}, (err, postRaw) => {
+        if(req.isAuthenticated()) {
+            userModel.findOne({'_id': req.session.passport.user}, (err, user) => {
+                req.session.user = user
                 if (err) return handleError(err)
-                for (let i = 0; i < postRaw.length; i++) {
-                    if ( postRaw[i].userId == _id || user.follows.contains(postRaw[i].userId) ) {
-                        finalPosts.push(postRaw[i])
-                    }
-                }
-                finalPosts.reverse()
-                for (let i = 0; i < finalPosts.length; i++) {
-                    for (let j = 0; j < user.favorite.length; j++) {
-                        if (finalPosts[i]._id == user.favorite[j]) {
-                            finalPosts[i].class = 'favorite'
-                            finalPosts[i].cuore = 'Cuore'
-                        } else {
-                            finalPosts[i].class = 'favorite_border'
-                            finalPosts[i].cuore = 'noCuore'
+                let { _id } = user
+                let finalPosts = []
+                let posts = []
+                postModel.find({}, (err, postRaw) => {
+                    if (err) return handleError(err)
+                    for (let i = 0; i < postRaw.length; i++) {
+                        if (postRaw[i].userId == _id || user.follows.includes(postRaw[i].userId)) {
+                            finalPosts.push(postRaw[i])
                         }
                     }
-                }
-                res.render('index', {
-                    user,
-                    posts: finalPosts
+                    finalPosts.reverse()
+                    for (let i = 0; i < finalPosts.length; i++) {
+                        for (let j = 0; j < user.favorite.length; j++) {
+                            if (finalPosts[i]._id == user.favorite[j]) {
+                                finalPosts[i].class = 'favorite'
+                                finalPosts[i].cuore = 'Cuore'
+                            } else {
+                                finalPosts[i].class = 'favorite_border'
+                                finalPosts[i].cuore = 'noCuore'
+                            }
+                        }
+                    }
+                    res.render('index', {
+                        user,
+                        posts: finalPosts
+                    })
                 })
             })
-        })
+        } else {
+            res.redirect('/login')
+        }
+        
     })
     .get('/profile', (req, res) => {
-        let id = '5b03f4fedefd6a00482dc82d'
+        let id = req.session.passport.user
         
         userModel.findById(id, (err, user) => {
             let { _id } = user
@@ -63,7 +75,7 @@ express()
             postModel.find({}, (err, postRaw) => {
                 if (err) return handleError(err)
                 for (let i = 0; i < postRaw.length; i++) {
-                    if ( postRaw[i].userId == _id || user.follows.contains(postRaw[i].userId) ) {
+                    if ( postRaw[i].userId == _id) {
                         finalPosts.push(postRaw[i])
                     }
                 }
@@ -93,6 +105,20 @@ express()
             let { _id } = user
             let finalPosts = []
             let posts = []
+            let isFollowed = {
+                color: 'blue',
+                icon: 'thumb_up',
+                text: 'Follow'
+            }
+            /* Session stuff */
+            let follows = '5b03f4fedefd6a00482dc82d'
+            for (let i = 0; i < follows.length; i++) {
+                if (follows == String(_id)) {
+                    isFollowed.color = 'red'
+                    isFollowed.icon = 'thumb_down'
+                    isFollowed.text = 'Unfollow'
+                }
+            }
             postModel.find({}, (err, postRaw) => {
                 if (err) return handleError(err)
                 for (let i = 0; i < postRaw.length; i++) {
@@ -114,9 +140,71 @@ express()
                 }
                 res.render('profileExt', {
                     user,
-                    posts: finalPosts
+                    posts: finalPosts,
+                    isFollowed
                 })
             })
+        })
+    })
+    .get('/editProfile/:userId', (req, res) => {
+        /* PRENDERE ID DA SESSIONE */
+        let userId = req.session.passport.user
+        userModel.findById(userId, (err, user) => {
+            if (err) return handleError(err)
+            res.render('editProfile', {
+                user
+            })
+        })
+    })
+    .get('/favorite', (req, res) => {
+        let id = req.session.passport.user
+        userModel.findById(id, (err, user) => {
+            if(err) return handleError(err)
+            let { favorite } = user
+            postModel.find({}, (err, posts) => {
+                if (err) return handleError(err)
+                let postList = []
+                for (let i = 0; i < posts.length; i++) {
+                    for (let j = 0; j < favorite.length; j++) {
+                        if (String(posts[i]._id) == favorite[j]) {
+                            postList.push(posts[i])
+                        }
+                    }
+                }
+                posts.reverse()
+                res.render('favorite', {
+                    posts: postList,
+                    user
+                })
+            })
+        })
+    })
+    .get('/search', (req, res) => {
+        let id = req.session.passport.user
+        userModel.findById(id, (err, user) => {
+            if(err) return handleError(err)
+            res.render('search',{
+                user
+            })
+        })
+    })
+    .get('/login', (req, res) => {
+        res.render('login')
+    })
+    .get('/signup', (req, res) => {
+        res.render('signup')
+    })
+    .post('/login', passport.authenticate("local", {
+        successRedirect: "/",
+        failureRedirect: "/login"
+    }))
+    .post('/signup', passport.authenticate('local-register', {
+        successRedirect: "/",
+        failureRedirect: "/signup"
+    }))
+    .get('/logout', (req, res, next) => {
+        req.session.destroy((err) => {
+            res.redirect("/")
         })
     })
     .post('/post', (req, res) => {
@@ -124,8 +212,8 @@ express()
             title: req.body.title,
             text: req.body.text,
             url: req.body.url,
-            userId: '5b03f4fedefd6a00482dc82d',
-            publisher: 'Tommaso Iovane'
+            userId: req.session.passport.user,
+            publisher: req.session.user.first_name + ' ' + req.session.user.last_name
         }
         postModel.create(post, (err) => {
             if (err) return handleError(err)
@@ -133,8 +221,8 @@ express()
         })
     })
     .post('/addFav', (req, res) => {
-        let postId = req.body.postId
-        userModel.findOne({}, (err, user) => {
+        let { postId } = req.body
+        userModel.findOne({'_id': req.session.passport.user}, (err, user) => {
             if (err) return handleError(err)
             postModel.findOne({'_id': postId}, (err, post) => {
                 user.favorite.push(post._id)
@@ -146,7 +234,7 @@ express()
     })
     .post('/remFav', (req, res) => {
         let postId = req.body.postId
-        userModel.findOne({}, (err, user) => {
+        userModel.findOne({'_id': req.session.passport.user}, (err, user) => {
             if (err) return handleError(err)
             for (let i = 0; i < user.favorite.length; i++) {
                 if (user.favorite[i] == postId) {
@@ -161,5 +249,66 @@ express()
     .get('/ok', (req, res) => {
         res.render('ok')
     })
-    
+    .post('/addFollow', (req, res) => {
+        let { userId } = req.body
+        userModel.findOne({'_id': req.session.passport.user}, (err, user) => {
+            if (err) return handleError(err)
+            user.follows.push(userId)
+            user.save((err, updatedUser) => {
+                res.send('followed!')
+            })
+        })
+    })
+    .post('/remFollow', (req, res) => {
+        let { userId } = req.body
+        userModel.findOne({'_id': req.session.passport.user}, (err, user) => {
+            if (err) return handleError(err)
+            for (let i = 0; i < user.follows.length; i++) {
+                if (user.follows[i] == userId) {
+                    user.follows.splice(i, 1)
+                }
+            }
+            user.save((err, updatedUser) => {
+                res.send('unfollowed!')
+            })
+        })
+    })
+    .post('/editProfile/:userId', (req, res) => {
+        if (req.isAuthenticated()) {
+            let { userId } = req.params
+            let newUser = req.body
+            if (newUser.password === newUser.passwordConfirm) {
+                userModel.findById(userId, (err, user) => {
+                    if (err) return handleError(err)
+                    user.age = newUser.age
+                    user.address = newUser.address
+                    user.city = newUser.city
+                    user.email = newUser.email
+                    user.backImg = newUser.backImg
+                    user.profileImg = newUser.profileImg
+                    user.description = newUser.description
+                    user.password = newUser.password
+                    user.save((err, updatedUser) => {
+                        res.render('ok')
+                    })
+                })
+            } else {
+                res.send('error, password didnt match!')
+            }
+        }
+    })
+    .post('/searchPerson', (req, res) => {
+        let { query } = req.body
+        userModel.find({'email': query}, (err, user) => {
+            res.render('searchResult', {
+                user
+            })
+        })
+    })
+
+    .get('/session', (req, res) => {
+        res.send(req.session)
+    })
+
     .listen(port || 8080)
+
