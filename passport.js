@@ -4,7 +4,11 @@ let userModel = require('./user.js')
 let postModel = require('./post.js')
 
 passport.use(new LocalStrategy(authenticate))
-passport.use('local-register', new LocalStrategy({passReqToCallback: true}, register))
+passport.use('local-register', new LocalStrategy({
+    passReqToCallback: true,
+    usernameField: 'email',
+    passwordField: 'password'
+}, register))
 
 function authenticate(email, password, done) {
     userModel.findOne({'email': email}, (err, user) => {
@@ -20,13 +24,9 @@ function authenticate(email, password, done) {
 }
 
 function register(req, email, password, done) {
-    userModel.find({'email': email}, (err, user) => {
-        console.log(user)
-        if (user == []) {
-            console.log('Email already registered!')
-            return done(null, false, {message: 'Email already registered!'})
-        }
-        if (password !== req.body.password2) {
+    console.log(req, email, password)
+    userModel.findOne({'email': email}, (err, user) => {
+        if (password != req.body.password2) {
             console.log('Passwords dont match!')
             return done (null, false, {message: 'Passwords dont match!'})
         }

@@ -22,7 +22,7 @@
                 <div class="background">
                     <img src="{{backImg}}">
                 </div>
-                <a href="/profile">
+                <a href="/profile}">
                     <img class="circle" src="{{profileImg}}">
                 </a>
                 <a href="/profile">

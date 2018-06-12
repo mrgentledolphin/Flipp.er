@@ -66,6 +66,9 @@ express()
         
     })
     .get('/profile', (req, res) => {
+        if (!req.isAuthenticated()) {
+            res.redirect('/login')
+        }
         let id = req.session.passport.user
         
         userModel.findById(id, (err, user) => {
@@ -99,6 +102,9 @@ express()
         })
     })
     .get('/profile/:userId', (req, res) => {
+        if (!req.isAuthenticated()) {
+            res.redirect('/login')
+        }
         let id = req.params.userId
 
         userModel.findById(id, (err, user) => {
@@ -110,44 +116,48 @@ express()
                 icon: 'thumb_up',
                 text: 'Follow'
             }
-            /* Session stuff */
-            let follows = '5b03f4fedefd6a00482dc82d'
-            for (let i = 0; i < follows.length; i++) {
-                if (follows == String(_id)) {
-                    isFollowed.color = 'red'
-                    isFollowed.icon = 'thumb_down'
-                    isFollowed.text = 'Unfollow'
-                }
-            }
-            postModel.find({}, (err, postRaw) => {
-                if (err) return handleError(err)
-                for (let i = 0; i < postRaw.length; i++) {
-                    if (postRaw[i].userId == _id) {
-                        finalPosts.push(postRaw[i])
+            userModel.findById(req.session.passport.user, (err, userSession) => {
+                let { follows } = userSession
+                for (let i = 0; i < follows.length; i++) {
+                    if (follows[i] == String(_id)) {
+                        isFollowed.color = 'red'
+                        isFollowed.icon = 'thumb_down'
+                        isFollowed.text = 'Unfollow'
                     }
                 }
-                finalPosts.reverse()
-                for (let i = 0; i < finalPosts.length; i++) {
-                    for (let j = 0; j < user.favorite.length; j++) {
-                        if (finalPosts[i]._id == user.favorite[j]) {
-                            finalPosts[i].class = 'favorite'
-                            finalPosts[i].cuore = 'Cuore'
-                        } else {
-                            finalPosts[i].class = 'favorite_border'
-                            finalPosts[i].cuore = 'noCuore'
+                postModel.find({}, (err, postRaw) => {
+                    if (err) return handleError(err)
+                    for (let i = 0; i < postRaw.length; i++) {
+                        if (postRaw[i].userId == _id) {
+                            finalPosts.push(postRaw[i])
                         }
                     }
-                }
-                res.render('profileExt', {
-                    user,
-                    posts: finalPosts,
-                    isFollowed
+                    finalPosts.reverse()
+                    for (let i = 0; i < finalPosts.length; i++) {
+                        for (let j = 0; j < user.favorite.length; j++) {
+                            if (finalPosts[i]._id == user.favorite[j]) {
+                                finalPosts[i].class = 'favorite'
+                                finalPosts[i].cuore = 'Cuore'
+                            } else {
+                                finalPosts[i].class = 'favorite_border'
+                                finalPosts[i].cuore = 'noCuore'
+                            }
+                        }
+                    }
+                    res.render('profileExt', {
+                        user,
+                        posts: finalPosts,
+                        isFollowed
+                    })
                 })
             })
+            
         })
     })
     .get('/editProfile/:userId', (req, res) => {
-        /* PRENDERE ID DA SESSIONE */
+        if (!req.isAuthenticated()) {
+            res.redirect('/login')
+        }
         let userId = req.session.passport.user
         userModel.findById(userId, (err, user) => {
             if (err) return handleError(err)
@@ -157,6 +167,9 @@ express()
         })
     })
     .get('/favorite', (req, res) => {
+        if (!req.isAuthenticated()) {
+            res.redirect('/login')
+        }
         let id = req.session.passport.user
         userModel.findById(id, (err, user) => {
             if(err) return handleError(err)
@@ -180,6 +193,9 @@ express()
         })
     })
     .get('/search', (req, res) => {
+        if (!req.isAuthenticated()) {
+            res.redirect('/login')
+        }
         let id = req.session.passport.user
         userModel.findById(id, (err, user) => {
             if(err) return handleError(err)
@@ -193,6 +209,32 @@ express()
     })
     .get('/signup', (req, res) => {
         res.render('signup')
+    })
+    .get('/follows', (req, res) => {
+        if (!req.isAuthenticated()) {
+            res.redirect('/login')
+        }
+        let id = req.session.passport.user
+        userModel.findById(id, (err, user) => {
+            let { follows } = user
+            userModel.find({}, (err, allUser) => {
+                let followed = []
+                let followedId = []
+                for (let i = 0; i < allUser.length; i++) {
+                    for (let j = 0; j < follows.length; j++) {
+                        if (follows[j] == String(allUser[i]._id) && String(allUser[i]._id) != id && !followedId.includes(follows[j])) {
+                            console.log(follows[j], allUser[i]._id)
+                            followed.push(allUser[i])
+                            followedId.push(String(allUser[i]._id))
+                        }
+                    }
+                }
+                res.render('follows', {
+                    user: followed
+                })
+            })
+        })
+
     })
     .post('/login', passport.authenticate("local", {
         successRedirect: "/",
@@ -298,6 +340,9 @@ express()
         }
     })
     .post('/searchPerson', (req, res) => {
+        if (!req.isAuthenticated()) {
+            res.redirect('/login')
+        }
         let { query } = req.body
         userModel.find({'email': query}, (err, user) => {
             res.render('searchResult', {
