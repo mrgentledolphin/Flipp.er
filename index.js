@@ -2,7 +2,7 @@ const express = require('express')
 const session = require('express-session')
 const passport = require('passport')
 const bodyParser = require('body-parser')
-const port = 3500
+const port = 80
 const path = require('path')
 /* MONGODB */
 const mongoose = require('mongoose')
